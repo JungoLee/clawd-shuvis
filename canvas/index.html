@@ -13,6 +13,7 @@
             --accent-flash: #38bdf8;
             --accent-pro: #4ade80;
             --accent-sonnet: #fb923c;
+            --accent-opus: #a855f7;
         }
 
         body {
@@ -29,7 +30,7 @@
         }
 
         .dashboard {
-            width: 90%;
+            width: 95%;
             max-width: 400px;
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -52,18 +53,18 @@
         p {
             color: var(--text-secondary);
             font-size: 0.875rem;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .button-group {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .model-btn {
             position: relative;
-            padding: 18px;
+            padding: 16px;
             border: none;
             border-radius: 16px;
             font-size: 1rem;
@@ -78,44 +79,26 @@
             overflow: hidden;
         }
 
-        .model-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
         .model-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        }
-
-        .model-btn:hover::before {
-            opacity: 1;
+            filter: brightness(1.1);
         }
 
         .model-btn:active {
             transform: translateY(0);
         }
 
-        .flash { background-color: var(--accent-flash); box-shadow: 0 4px 14px 0 rgba(56, 189, 248, 0.39); }
-        .pro { background-color: var(--accent-pro); box-shadow: 0 4px 14px 0 rgba(74, 222, 128, 0.39); }
-        .sonnet { background-color: var(--accent-sonnet); box-shadow: 0 4px 14px 0 rgba(251, 146, 60, 0.39); }
+        .flash { background-color: var(--accent-flash); }
+        .pro { background-color: var(--accent-pro); }
+        .sonnet { background-color: var(--accent-sonnet); }
+        .opus { background-color: var(--accent-opus); }
 
         .status-msg {
-            margin-top: 24px;
+            margin-top: 20px;
             font-size: 0.75rem;
             color: var(--text-secondary);
             height: 1.2em;
-        }
-
-        .icon {
-            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -126,54 +109,45 @@
 
         <div class="button-group">
             <button class="model-btn flash" onclick="changeModel('google-antigravity/gemini-3-flash', 'Gemini 3 Flash')">
-                <span class="icon">⚡</span> Gemini 3 Flash
+                ⚡ Gemini 3 Flash
             </button>
-            <button class="model-btn pro" onclick="changeModel('google-antigravity/gemini-1.5-pro', 'Gemini 1.5 Pro')">
-                <span class="icon">🧠</span> Gemini 1.5 Pro
+            <button class="model-btn pro" onclick="changeModel('google-antigravity/gemini-3-pro', 'Gemini 3 Pro')">
+                🧠 Gemini 3 Pro
             </button>
-            <button class="model-btn sonnet" onclick="changeModel('anthropic/claude-sonnet-4-5', 'Claude 3.5 Sonnet')">
-                <span class="icon">🎨</span> Claude 3.5 Sonnet
+            <button class="model-btn sonnet" onclick="changeModel('anthropic/claude-sonnet-4-5', 'Claude 4.5 Sonnet')">
+                🎨 Claude 4.5 Sonnet
+            </button>
+            <button class="model-btn opus" onclick="changeModel('google-antigravity/claude-opus-4-5-thinking', 'Claude 4.5 Opus')">
+                🔮 Claude 4.5 Opus
             </button>
         </div>
 
-        <div id="status" class="status-msg">준비됨</div>
+        <div id="status" class="status-msg">🟢 자동 실행 준비 완료</div>
     </div>
 
     <script>
-        // 연결 상태 체크 (브릿지 확인)
-        function checkBridge() {
-            const status = document.getElementById('status');
-            if (window.clawdbotSendUserAction) {
-                status.innerText = '🟢 자동 실행 준비 완료 (연결됨)';
-                status.style.color = '#4ade80';
-                return true;
-            } else {
-                status.innerText = '🔴 미연결: 자동 실행을 위해 화면 우측 상단 [Pair] 버튼을 눌러주세요!';
-                status.style.color = '#f87171';
-                return false;
-            }
-        }
-
-        // 1초마다 연결 상태 확인
-        setInterval(checkBridge, 1000);
-
         function changeModel(modelId, modelName) {
             const status = document.getElementById('status');
-            const command = `/model ${modelId}`;
+            status.innerText = `${modelName} 전환 중...`;
             
-            if (checkBridge()) {
+            if (window.clawdbotSendUserAction) {
                 window.clawdbotSendUserAction({
                     name: 'change_model',
                     surfaceId: 'main',
                     context: { modelId: modelId, modelName: modelName }
                 });
-                status.innerText = `🚀 ${modelName}로 즉시 전환 중...`;
+                status.innerText = `🚀 ${modelName} 완료!`;
+                status.style.color = '#4ade80';
             } else {
-                // 브릿지가 없을 경우 클립보드에 복사라도 해줌
-                navigator.clipboard.writeText(command).then(() => {
-                    alert(`자동 실행을 위해 먼저 [Pair] 버튼을 눌러주세요!\n(지금은 명령어가 복사되었습니다. 채팅창에 붙여넣으세요)`);
+                navigator.clipboard.writeText(`/model ${modelId}`).then(() => {
+                    alert(`자동 실행 미연결\n명령어가 복사되었습니다: /model ${modelId}`);
                 });
             }
+            
+            setTimeout(() => {
+                status.innerText = '🟢 자동 실행 준비 완료';
+                status.style.color = '#94a3b8';
+            }, 3000);
         }
     </script>
 </body>

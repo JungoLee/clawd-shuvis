@@ -1,8 +1,8 @@
-# Simple Shuvis Controller
+# Minimal Shuvis Controller
 Add-Type -AssemblyName System.Windows.Forms
 $f = New-Object System.Windows.Forms.Form
 $f.Text = 'Shuvis Control'
-$f.Size = New-Object System.Drawing.Size(300, 400)
+$f.Size = New-Object System.Drawing.Size(300, 500)
 $f.StartPosition = 'CenterScreen'
 $f.TopMost = $true
 
@@ -14,9 +14,10 @@ $l.TextAlign = 'MiddleCenter'
 $f.Controls.Add($l)
 
 $btns = @(
-    @('⚡ Flash (v3)', 'google-antigravity/gemini-3-flash', '#38bdf8'),
-    @('🧠 Pro (v3)', 'google-antigravity/gemini-3-pro', '#4ade80'),
-    @('🎨 Sonnet (4.5)', 'anthropic/claude-sonnet-4-5', '#fb923c')
+    @('⚡ Gemini 3 Flash', 'google-antigravity/gemini-3-flash', '#38bdf8'),
+    @('🧠 Gemini 3 Pro', 'google-antigravity/gemini-3-pro', '#4ade80'),
+    @('🎨 Claude 4.5 Sonnet', 'anthropic/claude-sonnet-4-5', '#fb923c'),
+    @('🔮 Claude 4.5 Opus', 'google-antigravity/claude-opus-4-5-thinking', '#a855f7')
 )
 
 $y = 80
@@ -26,7 +27,9 @@ foreach ($b in $btns) {
     $btn.Location = New-Object System.Drawing.Point(30, $y)
     $btn.Size = New-Object System.Drawing.Size(240, 60)
     $btn.BackColor = $b[2]
+    $btn.ForeColor = 'White'
     $btn.FlatStyle = 'Flat'
+    $btn.Font = New-Object System.Drawing.Font('Malgun Gothic', 9, [System.Drawing.FontStyle]::Bold)
     $btn.Add_Click({
         param($s, $e)
         $m = $this.Tag
