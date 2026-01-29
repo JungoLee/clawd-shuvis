@@ -21,5 +21,11 @@ Write-Host "3️⃣ 와처를 가동합니다..." -ForegroundColor Cyan
 $watcherPath = Join-Path $PSScriptRoot "watcher.ps1"
 Start-Process "powershell" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$watcherPath`"" -WindowStyle Minimized
 
+# 4. 슈비스 모델 컨트롤러 실행 (진짜 자동 전환기)
+Write-Host "4️⃣ 모델 컨트롤러를 가동합니다..." -ForegroundColor Cyan
+$controllerPath = Join-Path $PSScriptRoot "controller.ps1"
+Start-Process "powershell" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$controllerPath`"" -WindowStyle Normal
+
+
 Write-Host "✅ 모든 시스템이 정상적으로 가동되었습니다!" -ForegroundColor Green
 Start-Sleep -Seconds 3
