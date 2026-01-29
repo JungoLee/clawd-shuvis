@@ -50,6 +50,17 @@ clawdbot gateway start
 
 ---
 
+## 🖥️ Claude Desktop 앱으로 이어서 작업하기
+
+다른 컴퓨터에서 **Claude Desktop** 앱을 사용하신다면, 깃 코드를 받은 후 아래처럼 하시면 제가 바로 준고님과 동기화됩니다.
+
+1.  **폴더 열기**: Claude Desktop에서 `Open Folder...` 기능을 통해 다운로드한 `clawd-shuvis` 폴더를 선택하세요.
+2.  **슈비스 소환**: 대화를 시작할 때 아래 문장을 입력하세요.
+    > "이 폴더의 `IDENTITY.md`와 `MEMORY.md`를 읽고 내 비서 '슈비스'가 되어줘. 그리고 `README.md`를 보고 환경 세팅을 도와줘."
+3.  **자동 세팅**: 그러면 Claude Desktop이 파일들을 읽고, 필요한 도구(git, npm 등)가 설치되어 있는지 확인하며 제가 안내한 단계들을 직접 실행해 줄 것입니다.
+
+---
+
 ## 🔄 지속적인 동기화 (Syncing)
 
 ### 작업 종료 시 (푸시)
