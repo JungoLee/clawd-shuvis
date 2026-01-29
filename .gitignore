@@ -1,0 +1,6 @@
+# Clawdbot Ignored Files
+.clawdbot/
+node_modules/
+*.log
+screenshot.png
+canvas/
