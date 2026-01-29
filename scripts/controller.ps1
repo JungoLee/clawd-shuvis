@@ -1,4 +1,4 @@
-# SHUVIS // CYBER_CITY_EDITION // v4.3
+# SHUVIS // CYBER_CITY_EDITION // v4.4
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
@@ -8,8 +8,8 @@ $screenshotDir = Join-Path $parentDir "screenshot"
 $bgImage = Join-Path $screenshotDir "image.png"
 
 $f = New-Object System.Windows.Forms.Form
-$f.Text = 'SHUVIS_OS // NEURAL_LINK_v4.3'
-$f.Size = New-Object System.Drawing.Size(350, 320)
+$f.Text = 'SHUVIS_OS // NEURAL_LINK_v4.4'
+$f.Size = New-Object System.Drawing.Size(350, 380)
 $f.StartPosition = 'CenterScreen'
 $f.BackColor = [System.Drawing.Color]::FromArgb(255, 10, 10, 26)
 $f.FormBorderStyle = 'FixedDialog'
@@ -78,11 +78,12 @@ $change = {
     $f.Refresh()
     
     try {
-        $cmd = "clawdbot config set agents.defaults.model.primary '$id'"
+        # 큰따옴표로 감싸서 전달 (cmd.exe 호환)
+        $cmd = "clawdbot config set agents.defaults.model.primary `"$id`""
         $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c $cmd" -WindowStyle Hidden -Wait -PassThru
         
         if ($process.ExitCode -eq 0) {
-            $sLabel.Text = ">>> $name : PATCHED. RESTART REQUIRED."
+            $sLabel.Text = ">>> $name : OK. RESTART GATEWAY!"
             $sLabel.ForeColor = [System.Drawing.Color]::TranslateFromHtml($c1)
         } else {
             $sLabel.Text = ">>> ERR: EXIT_$($process.ExitCode)"
@@ -94,27 +95,12 @@ $change = {
     }
 }
 
-# Restart Gateway Function
-$restartGateway = {
-    $sLabel.Text = ">>> REBOOTING_GATEWAY..."
-    $sLabel.ForeColor = [System.Drawing.Color]::Orange
-    $f.Refresh()
-    try {
-        Start-Process -FilePath "clawdbot" -ArgumentList "gateway", "restart" -WindowStyle Hidden
-        $sLabel.Text = ">>> RESTART_SIGNAL_SENT"
-        $sLabel.ForeColor = [System.Drawing.Color]::Lime
-    } catch {
-        $sLabel.Text = ">>> RESTART_FAILED"
-        $sLabel.ForeColor = [System.Drawing.Color]::Red
-    }
-}
-
 # Button Helper
-function Add-GradientBtn($text, $y, $c1, $c2, $modelId, $isRestart = $false) {
+function Add-GradientBtn($text, $y, $c1, $c2, $modelId) {
     $b = New-Object System.Windows.Forms.Button
     $b.Text = "$text"
     $b.Location = New-Object System.Drawing.Point(45, $y)
-    $b.Size = New-Object System.Drawing.Size(260, 50)
+    $b.Size = New-Object System.Drawing.Size(260, 55)
     $b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $b.ForeColor = [System.Drawing.Color]::White
     $b.BackColor = [System.Drawing.Color]::FromArgb(100, 0, 0, 0)
@@ -149,19 +135,14 @@ function Add-GradientBtn($text, $y, $c1, $c2, $modelId, $isRestart = $false) {
         } catch {}
     })
 
-    if ($isRestart) {
-        $b.Add_Click({ &$restartGateway })
-    } else {
-        $b.Add_Click({ &$change $modelId $text $c1 $c2 })
-    }
+    $b.Add_Click({ &$change $modelId $text $c1 $c2 })
     $f.Controls.Add($b)
 }
 
-# CLAUDE SONNET ONLY
-Add-GradientBtn 'CLAUDE_SONNET' 120 '#ec4899' '#f472b6' 'anthropic/claude-sonnet-4-5'
-
-# RESTART BUTTON
-Add-GradientBtn '⚡ RESTART GATEWAY ⚡' 190 '#f59e0b' '#ef4444' '' $true
+# 3개 모델만 남김
+Add-GradientBtn 'GEMINI_FLASH' 120 '#38bdf8' '#818cf8' 'google-antigravity/gemini-3-flash'
+Add-GradientBtn 'GEMINI_PRO_LOW' 185 '#10b981' '#34d399' 'google-antigravity/gemini-3-pro-low'
+Add-GradientBtn 'CLAUDE_SONNET' 250 '#ec4899' '#f472b6' 'anthropic/claude-sonnet-4-5'
 
 # Footer
 $footer = New-Object System.Windows.Forms.Label
@@ -171,7 +152,7 @@ $footer.BackColor = [System.Drawing.Color]::Transparent
 $footer.Font = New-Object System.Drawing.Font('Consolas', 7)
 $footer.Size = New-Object System.Drawing.Size(330, 20)
 $footer.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
-$footer.Location = New-Object System.Drawing.Point(0, 250)
+$footer.Location = New-Object System.Drawing.Point(0, 320)
 $f.Controls.Add($footer)
 
 [void]$f.ShowDialog()
