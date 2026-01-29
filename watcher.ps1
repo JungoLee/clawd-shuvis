@@ -1,21 +1,33 @@
-# 슈비스 로그 와처 (Shuvis Log Watcher) - 컨트롤러 연동형
-$logDate = Get-Date -Format "yyyy-MM-dd"
-$logPath = "C:\tmp\clawdbot\clawdbot-$logDate.log"
+# 슈비스 로그 와처 (Shuvis Log Watcher) - 초강력 버전
+$logDir = "C:\tmp\clawdbot"
 $controllerPath = Join-Path $PSScriptRoot "controller.bat"
 $patterns = @("rate_limit_error", "429", "insufficient_quota", "usage limit")
 
-Write-Host "🛡️ 슈비스 와처 가동 중... (에러 시 컨트롤러 팝업)" -ForegroundColor Cyan
+Write-Host "🛡️ 슈비스 와처 가동 시작 (에러 시 컨트롤러 자동 팝업)" -ForegroundColor Cyan
 
-# 로그 대기
-while (!(Test-Path $logPath)) { Start-Sleep -Seconds 10 }
+# 최신 로그 파일 찾기
+function Get-LatestLog {
+    return Get-ChildItem -Path $logDir -Filter "clawdbot-*.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+}
 
-# 실시간 감시 및 컨트롤러 실행
-Get-Content $logPath -Wait -Tail 1 | ForEach-Object {
+$currentLog = Get-LatestLog
+if ($null -eq $currentLog) {
+    Write-Host "❌ 로그 파일을 찾을 수 없습니다. 대기 중..." -ForegroundColor Yellow
+    while ($null -eq $currentLog) {
+        Start-Sleep -Seconds 5
+        $currentLog = Get-LatestLog
+    }
+}
+
+Write-Host "🔍 감시 중인 로그: $($currentLog.FullName)" -ForegroundColor Gray
+
+# 실시간 감시 루프
+Get-Content $currentLog.FullName -Wait -Tail 1 | ForEach-Object {
     $line = $_
     foreach ($p in $patterns) {
         if ($line.Contains($p)) {
-            Write-Host "⚠️ 사용량 초과 감지 ($p)! 컨트롤러를 실행합니다." -ForegroundColor Red
-            Start-Process $controllerPath
+            Write-Host "⚠️ [$p] 감지! 컨트롤러를 실행합니다." -ForegroundColor Red
+            Start-Process -FilePath $controllerPath -WindowStyle Normal
             break
         }
     }
