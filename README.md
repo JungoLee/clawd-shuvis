@@ -12,26 +12,17 @@ git clone https://github.com/JungoLee/clawd-shuvis.git
 cd clawd-shuvis
 
 # 2. 자동 설정 스크립트 실행
-powershell -ExecutionPolicy Bypass -File .\setup.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
 ```
 
 ---
 
-## 🛠️ 상세 단계별 세팅 (수동)
-
-### 1. Clawdbot 설치 및 로그인
-```bash
-npm install -g clawdbot
-clawdbot onboard
-```
-
-### 2. 게이트웨이 시작
-```bash
-clawdbot gateway start
-```
-
-### 3. 이전 설정 복구
-저장소의 `clawdbot_backup.json` 내용을 참고하여 `~/.clawdbot/clawdbot.json`을 수정하세요.
+## 🛠️ 폴더 구조 (Refactored)
+- `scripts/`: 슈비스 가동에 필요한 핵심 스크립트 (setup, startup, watcher, controller)
+- `docs/`: 사용자 가이드 및 문서
+- `canvas/`: 모델 대시보드 웹 파일
+- `memory/`: 일일 대화 로그
+- `* .md`: 슈비스의 정체성 및 장기 기억 파일들
 
 ---
 

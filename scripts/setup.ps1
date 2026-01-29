@@ -3,8 +3,9 @@
 Write-Host "🛠️ 슈비스(Shuvis) 자동 설정 및 검증을 시작합니다..." -ForegroundColor Cyan
 
 # 1. 경로 설정
-$currentDir = $PSScriptRoot
-$startupScript = Join-Path $currentDir "startup.ps1"
+$scriptsDir = $PSScriptRoot
+$rootDir = (Get-Item $scriptsDir).Parent.FullName
+$startupScript = Join-Path $scriptsDir "startup.ps1"
 $windowsStartupFolder = [System.IO.Path]::Combine($env:APPDATA, "Microsoft\Windows\Start Menu\Programs\Startup")
 $shortcutPath = Join-Path $windowsStartupFolder "Shuvis_AutoStart.lnk"
 
@@ -26,7 +27,7 @@ try {
     $Shortcut = $WshShell.CreateShortcut($shortcutPath)
     $Shortcut.TargetPath = "powershell.exe"
     $Shortcut.Arguments = "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$startupScript`""
-    $Shortcut.WorkingDirectory = $currentDir
+    $Shortcut.WorkingDirectory = $rootDir
     $Shortcut.Save()
     Write-Host "  ✅ 완료: 다음 부팅부터 슈비스가 자동으로 인사합니다!" -ForegroundColor Green
 } catch {
@@ -35,14 +36,33 @@ try {
 
 # 4. 설정 파일 검증
 Write-Host "`n3️⃣ 설정 파일 확인 중..." -ForegroundColor White
-$files = @("IDENTITY.md", "MEMORY.md", "SOUL.md", "canvas\index.html", "watcher.ps1")
-foreach ($f in $files) {
-    $p = Join-Path $currentDir $f
+# Check root files
+$rootFiles = @("IDENTITY.md", "MEMORY.md", "SOUL.md", "CLAUDE.md")
+foreach ($f in $rootFiles) {
+    $p = Join-Path $rootDir $f
     if (Test-Path $p) {
         Write-Host "  ✅ $f : 존재함" -ForegroundColor Green
     } else {
         Write-Host "  ❌ $f : 유실됨!" -ForegroundColor Red
     }
+}
+
+# Check script files
+$scriptFiles = @("startup.ps1", "watcher.ps1", "controller.ps1")
+foreach ($f in $scriptFiles) {
+    $p = Join-Path $scriptsDir $f
+    if (Test-Path $p) {
+        Write-Host "  ✅ scripts\$f : 존재함" -ForegroundColor Green
+    } else {
+        Write-Host "  ❌ scripts\$f : 유실됨!" -ForegroundColor Red
+    }
+}
+
+# Check canvas
+if (Test-Path (Join-Path $rootDir "canvas\index.html")) {
+    Write-Host "  ✅ canvas\index.html : 존재함" -ForegroundColor Green
+} else {
+    Write-Host "  ❌ canvas\index.html : 유실됨!" -ForegroundColor Red
 }
 
 Write-Host "`n✨ 모든 설정이 완료되었습니다! 이제 마음껏 슈비스를 사용하세요." -ForegroundColor Cyan

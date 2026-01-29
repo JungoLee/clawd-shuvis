@@ -1,4 +1,4 @@
-# Minimal Shuvis Controller
+# Simple Shuvis Controller
 Add-Type -AssemblyName System.Windows.Forms
 $f = New-Object System.Windows.Forms.Form
 $f.Text = 'Shuvis Control'
@@ -14,9 +14,9 @@ $l.TextAlign = 'MiddleCenter'
 $f.Controls.Add($l)
 
 $btns = @(
-    @('⚡ Flash', 'google-antigravity/gemini-3-flash', '#38bdf8'),
-    @('🧠 Pro', 'google-antigravity/gemini-1.5-pro', '#4ade80'),
-    @('🎨 Sonnet', 'anthropic/claude-sonnet-4-5', '#fb923c')
+    @('⚡ Flash (v3)', 'google-antigravity/gemini-3-flash', '#38bdf8'),
+    @('🧠 Pro (v3)', 'google-antigravity/gemini-3-pro', '#4ade80'),
+    @('🎨 Sonnet (4.5)', 'anthropic/claude-sonnet-4-5', '#fb923c')
 )
 
 $y = 80
