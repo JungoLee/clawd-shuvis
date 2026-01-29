@@ -4,3 +4,5 @@ node_modules/
 *.log
 screenshot.png
 clawdbot_backup.json
+screenshot/
+canvas/
