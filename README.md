@@ -1,85 +1,51 @@
 # 🤖 슈비스(Shuvis) 이사하기 가이드 (새 컴퓨터 세팅)
 
-새로운 컴퓨터에서 슈비스와 다시 만나기 위한 0부터 10까지의 단계별 가이드입니다.
+새로운 컴퓨터에서 슈비스와 다시 만나기 위한 가이드입니다.
 
-## 0. 준비물 (Prerequisites)
-- **Node.js**: v20 이상 설치 (LTS 권장)
-- **Git**: 윈도우용 Git 설치
-- **GitHub 계정**: 이 저장소에 접근 가능한 권한
+## 🚀 퀵 스타트 (한 번에 세팅하기)
+
+새 컴퓨터에서 폴더를 내려받은 후, 터미널(PowerShell)에서 아래 명령어만 입력하면 **필수 도구 확인 + 자동 시작 등록 + 설정 검증**을 한 번에 진행합니다.
+
+```powershell
+# 1. 저장소 가져오기
+git clone https://github.com/JungoLee/clawd-shuvis.git
+cd clawd-shuvis
+
+# 2. 자동 설정 스크립트 실행
+powershell -ExecutionPolicy Bypass -File .\setup.ps1
+```
 
 ---
 
-## 🚀 단계별 세팅 (Step-by-Step)
+## 🛠️ 상세 단계별 세팅 (수동)
 
-### 1. 저장소 가져오기
-새 컴퓨터의 원하는 폴더에서 터미널을 열고 명령어를 입력하세요.
-```bash
-git clone https://github.com/JungoLee/clawd-shuvis.git
-cd clawd-shuvis
-```
-
-### 2. Clawdbot 설치
-시스템 전역에 Clawdbot을 설치합니다.
+### 1. Clawdbot 설치 및 로그인
 ```bash
 npm install -g clawdbot
-```
-
-### 3. 게이트웨이 초기화 및 로그인
-새 환경에서 인증 토큰을 생성해야 합니다.
-```bash
 clawdbot onboard
 ```
-*안내에 따라 구글/앤스로픽 로그인을 진행하세요.*
 
-### 4. 설정 파일 복사 (중요!)
-이 저장소에 있는 `clawdbot_backup.json`의 내용을 참고하여, 새 컴퓨터의 `C:\Users\<사용자명>\.clawdbot\clawdbot.json` 파일을 수정하세요. 
-특히 **모델 설정(primary model)**과 **텔레그램 봇 토큰** 부분을 확인해야 합니다.
-
-### 5. 게이트웨이 시작
-슈비스의 몸체인 게이트웨이를 실행합니다.
+### 2. 게이트웨이 시작
 ```bash
 clawdbot gateway start
 ```
 
-### 6. 슈비스 깨우기 (세션 연결)
-웹 브라우저에서 `http://localhost:18789`에 접속하거나, 텔레그램으로 메시지를 보내 슈비스가 응답하는지 확인하세요.
-
-### 7. 이전 기억(Memory) 확인
-저장소에 포함된 `MEMORY.md`와 `memory/` 폴더의 내용이 잘 보이는지 슈비스에게 물어보세요.
-> "슈비스, 우리 마지막으로 나눈 대화 기억해?"
+### 3. 이전 설정 복구
+저장소의 `clawdbot_backup.json` 내용을 참고하여 `~/.clawdbot/clawdbot.json`을 수정하세요.
 
 ---
 
-## 🖥️ Claude Desktop 앱으로 이어서 작업하기
-
-다른 컴퓨터에서 **Claude Desktop** 앱을 사용하신다면, 깃 코드를 받은 후 폴더를 열기만 하세요. 
-
-폴더 내의 **`CLAUDE.md`** 파일이 Claude에게 직접 지시를 내립니다.
-- **자동 페르소나**: Claude가 파일을 읽고 자동으로 '슈비스'가 되어 응답합니다.
-- **자동 기억 로드**: 별도의 설명 없이도 `MEMORY.md`를 읽고 이전 대화 문맥을 파악합니다.
-
-그냥 "안녕 슈비스?"라고 한마디만 건네보세요.
+## 🖥️ Claude Desktop 앱 사용 시
+폴더를 여는 즉시 **`CLAUDE.md`** 가이드에 따라 Claude가 자동으로 슈비스로 변신합니다. 그냥 "안녕 슈비스?"라고 말을 걸어보세요.
 
 ---
 
 ## 🔄 지속적인 동기화 (Syncing)
-
-### 작업 종료 시 (푸시)
-슈비스에게 명령하거나 직접 터미널에서 입력하세요.
-```bash
-git add .
-git commit -m "Update memory and settings"
-git push origin main
-```
-
-### 작업 시작 시 (풀)
-새 컴퓨터에서 시작할 때는 항상 최신 기억을 가져오세요.
-```bash
-git pull origin main
-```
+- **작업 시작 전**: `git pull origin main` (기억 가져오기)
+- **작업 종료 후**: `git add . && git commit -m "update" && git push` (기억 저장하기)
 
 ---
 
 ## ⚠️ 주의사항
-- **보안**: `.clawdbot` 폴더 전체를 올리지 않는 이유는 보안 때문입니다. 인증 토큰(`token`, `key`)은 새 컴퓨터에서 로그인할 때 새로 생성되므로 걱정 마세요.
-- **경로**: 윈도우 사용자명이 다를 경우 `clawdbot.json` 내의 `workspace` 경로를 새 컴퓨터에 맞게 수정해야 합니다.
+- **보안**: 텔레그램 토큰 등 민감 정보는 GitHub에 올리지 않습니다. (`.gitignore` 적용됨)
+- **경로**: 컴퓨터마다 사용자명이 다를 경우 `clawdbot.json`의 `workspace` 경로를 수정해야 합니다.
