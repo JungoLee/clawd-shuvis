@@ -1,22 +1,21 @@
-# SHUVIS // CYBER_CITY_EDITION // v4.2
+# SHUVIS // CYBER_CITY_EDITION // v4.3
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $scriptPath = $PSScriptRoot
-# screenshot 폴더가 없을 수도 있으니 체크 강화
 $parentDir = (Get-Item $scriptPath).Parent.FullName
 $screenshotDir = Join-Path $parentDir "screenshot"
 $bgImage = Join-Path $screenshotDir "image.png"
 
 $f = New-Object System.Windows.Forms.Form
-$f.Text = 'SHUVIS_OS // NEURAL_LINK_v4.2'
-$f.Size = New-Object System.Drawing.Size(350, 580)
+$f.Text = 'SHUVIS_OS // NEURAL_LINK_v4.3'
+$f.Size = New-Object System.Drawing.Size(350, 320)
 $f.StartPosition = 'CenterScreen'
 $f.BackColor = [System.Drawing.Color]::FromArgb(255, 10, 10, 26)
 $f.FormBorderStyle = 'FixedDialog'
 $f.TopMost = $true
 
-# 배경 이미지 로드 시도 (파일 잠금 및 누락 방지)
+# 배경 이미지 로드
 if (Test-Path $bgImage) {
     try {
         $fileStream = New-Object System.IO.FileStream($bgImage, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
@@ -24,12 +23,10 @@ if (Test-Path $bgImage) {
         $fileStream.Close()
         $f.BackgroundImage = $img
         $f.BackgroundImageLayout = 'Stretch'
-    } catch {
-        Write-Host "⚠️ 배경 이미지 로드 실패: $($_.Exception.Message)" -ForegroundColor Yellow
-    }
+    } catch {}
 }
 
-# Dark Purple Overlay & Gradient
+# Dark Purple Overlay
 $f.add_Paint({
     param($s, $e)
     try {
@@ -60,7 +57,7 @@ $l.BackColor = [System.Drawing.Color]::Transparent
 $l.Font = New-Object System.Drawing.Font('Consolas', 20, [System.Drawing.FontStyle]::Bold)
 $l.Size = New-Object System.Drawing.Size(330, 50)
 $l.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
-$l.Location = New-Object System.Drawing.Point(0, 40)
+$l.Location = New-Object System.Drawing.Point(0, 30)
 $f.Controls.Add($l)
 
 $sLabel = New-Object System.Windows.Forms.Label
@@ -70,10 +67,10 @@ $sLabel.BackColor = [System.Drawing.Color]::Transparent
 $sLabel.Font = New-Object System.Drawing.Font('Consolas', 9)
 $sLabel.Size = New-Object System.Drawing.Size(330, 20)
 $sLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
-$sLabel.Location = New-Object System.Drawing.Point(0, 90)
+$sLabel.Location = New-Object System.Drawing.Point(0, 80)
 $f.Controls.Add($sLabel)
 
-# Robust Command Function
+# Model Change Function
 $change = {
     param($id, $name, $c1, $c2)
     $sLabel.Text = ">>> PATCHING_NEURAL: $name"
@@ -81,7 +78,6 @@ $change = {
     $f.Refresh()
     
     try {
-        # 값에 따옴표를 추가하여 JSON 파싱 오류를 방지하고, cmd /c로 실행합니다.
         $cmd = "clawdbot config set agents.defaults.model.primary '$id'"
         $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c $cmd" -WindowStyle Hidden -Wait -PassThru
         
@@ -93,7 +89,7 @@ $change = {
             $sLabel.ForeColor = [System.Drawing.Color]::Red
         }
     } catch {
-        $sLabel.Text = ">>> EXCEPTION: $($_.Exception.Message.Substring(0, [Math]::Min(15, $_.Exception.Message.Length)))"
+        $sLabel.Text = ">>> EXCEPTION"
         $sLabel.ForeColor = [System.Drawing.Color]::Red
     }
 }
@@ -113,7 +109,7 @@ $restartGateway = {
     }
 }
 
-# Advanced Gradient Button Helper
+# Button Helper
 function Add-GradientBtn($text, $y, $c1, $c2, $modelId, $isRestart = $false) {
     $b = New-Object System.Windows.Forms.Button
     $b.Text = "$text"
@@ -161,14 +157,11 @@ function Add-GradientBtn($text, $y, $c1, $c2, $modelId, $isRestart = $false) {
     $f.Controls.Add($b)
 }
 
-# Models - 검증된 모델 아이디로 업데이트
-Add-GradientBtn 'GEMINI_FLASH' 130 '#38bdf8' '#818cf8' 'google-antigravity/gemini-3-flash'
-Add-GradientBtn 'GEMINI_PRO' 190 '#10b981' '#34d399' 'google-antigravity/gemini-3-pro-low'
-Add-GradientBtn 'CLAUDE_SONNET' 250 '#ec4899' '#f472b6' 'anthropic/claude-sonnet-4-5'
-Add-GradientBtn 'CLAUDE_OPUS' 310 '#8b5cf6' '#a78bfa' 'google-antigravity/claude-opus-4-5-thinking'
+# CLAUDE SONNET ONLY
+Add-GradientBtn 'CLAUDE_SONNET' 120 '#ec4899' '#f472b6' 'anthropic/claude-sonnet-4-5'
 
 # RESTART BUTTON
-Add-GradientBtn '⚡ RESTART GATEWAY ⚡' 380 '#f59e0b' '#ef4444' '' $true
+Add-GradientBtn '⚡ RESTART GATEWAY ⚡' 190 '#f59e0b' '#ef4444' '' $true
 
 # Footer
 $footer = New-Object System.Windows.Forms.Label
@@ -178,7 +171,7 @@ $footer.BackColor = [System.Drawing.Color]::Transparent
 $footer.Font = New-Object System.Drawing.Font('Consolas', 7)
 $footer.Size = New-Object System.Drawing.Size(330, 20)
 $footer.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
-$footer.Location = New-Object System.Drawing.Point(0, 500)
+$footer.Location = New-Object System.Drawing.Point(0, 250)
 $f.Controls.Add($footer)
 
 [void]$f.ShowDialog()
