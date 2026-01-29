@@ -140,34 +140,40 @@
     </div>
 
     <script>
+        // 연결 상태 체크 (브릿지 확인)
+        function checkBridge() {
+            const status = document.getElementById('status');
+            if (window.clawdbotSendUserAction) {
+                status.innerText = '🟢 자동 실행 준비 완료 (연결됨)';
+                status.style.color = '#4ade80';
+                return true;
+            } else {
+                status.innerText = '🔴 미연결: 자동 실행을 위해 화면 우측 상단 [Pair] 버튼을 눌러주세요!';
+                status.style.color = '#f87171';
+                return false;
+            }
+        }
+
+        // 1초마다 연결 상태 확인
+        setInterval(checkBridge, 1000);
+
         function changeModel(modelId, modelName) {
             const status = document.getElementById('status');
             const command = `/model ${modelId}`;
-            status.innerText = `${modelName} 전환 요청 중...`;
             
-            if (window.clawdbotSendUserAction) {
+            if (checkBridge()) {
                 window.clawdbotSendUserAction({
                     name: 'change_model',
                     surfaceId: 'main',
                     context: { modelId: modelId, modelName: modelName }
                 });
-                status.innerText = `${modelName}로 전환되었습니다!`;
-                status.style.color = '#4ade80';
+                status.innerText = `🚀 ${modelName}로 즉시 전환 중...`;
             } else {
-                // 브릿지가 없을 경우 클립보드에 복사
+                // 브릿지가 없을 경우 클립보드에 복사라도 해줌
                 navigator.clipboard.writeText(command).then(() => {
-                    status.innerText = `명령어 복사됨! 채팅창에 붙여넣으세요.`;
-                    status.style.color = '#38bdf8';
-                }).catch(() => {
-                    status.innerText = `명령어: ${command}`;
-                    status.style.color = '#f87171';
+                    alert(`자동 실행을 위해 먼저 [Pair] 버튼을 눌러주세요!\n(지금은 명령어가 복사되었습니다. 채팅창에 붙여넣으세요)`);
                 });
             }
-            
-            setTimeout(() => {
-                status.innerText = '준비됨';
-                status.style.color = '#94a3b8';
-            }, 4000);
         }
     </script>
 </body>
