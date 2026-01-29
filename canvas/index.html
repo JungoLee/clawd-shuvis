@@ -3,151 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>슈비스 모델 대시보드</title>
+    <title>SHUVIS // NEURAL_LINK</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-flash: #38bdf8;
-            --accent-pro: #4ade80;
-            --accent-sonnet: #fb923c;
-            --accent-opus: #a855f7;
+            --bg: #050505;
+            --neon-yellow: #fde047;
+            --neon-cyan: #06b6d4;
+            --neon-green: #10b981;
+            --neon-pink: #ec4899;
+            --neon-purple: #8b5cf6;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        .dashboard {
-            width: 95%;
-            max-width: 400px;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            font-weight: 700;
-            background: linear-gradient(to right, #60a5fa, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 24px;
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .model-btn {
-            position: relative;
-            padding: 16px;
-            border: none;
-            border-radius: 16px;
-            font-size: 1rem;
-            font-weight: 600;
+            background-color: var(--bg);
             color: white;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Share Tech Mono', monospace;
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 12px;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
+            border: 4px solid var(--neon-yellow);
+            box-sizing: border-box;
         }
 
-        .model-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            filter: brightness(1.1);
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
         }
 
-        .model-btn:active {
-            transform: translateY(0);
+        .glitch-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--neon-yellow);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px var(--neon-pink);
         }
 
-        .flash { background-color: var(--accent-flash); }
-        .pro { background-color: var(--accent-pro); }
-        .sonnet { background-color: var(--accent-sonnet); }
-        .opus { background-color: var(--accent-opus); }
+        .status-bar {
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--neon-cyan);
+            padding-bottom: 10px;
+        }
 
-        .status-msg {
-            margin-top: 20px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            height: 1.2em;
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .cyber-btn {
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 20px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .cyber-btn:hover {
+            background: var(--neon-cyan);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .cyber-btn.pro { border-color: var(--neon-green); color: var(--neon-green); }
+        .cyber-btn.pro:hover { background: var(--neon-green); color: black; box-shadow: 0 0 20px var(--neon-green); }
+
+        .cyber-btn.sonnet { border-color: var(--neon-pink); color: var(--neon-pink); }
+        .cyber-btn.sonnet:hover { background: var(--neon-pink); color: black; box-shadow: 0 0 20px var(--neon-pink); }
+
+        .cyber-btn.opus { border-color: var(--neon-purple); color: var(--neon-purple); }
+        .cyber-btn.opus:hover { background: var(--neon-purple); color: black; box-shadow: 0 0 20px var(--neon-purple); }
+
+        #log {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #444;
+            height: 20px;
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <h1>슈비스 대시보드</h1>
-        <p>전환할 모델을 선택해주세요</p>
-
-        <div class="button-group">
-            <button class="model-btn flash" onclick="changeModel('google-antigravity/gemini-3-flash', 'Gemini 3 Flash')">
-                ⚡ Gemini 3 Flash
-            </button>
-            <button class="model-btn pro" onclick="changeModel('google-antigravity/gemini-3-pro', 'Gemini 3 Pro')">
-                🧠 Gemini 3 Pro
-            </button>
-            <button class="model-btn sonnet" onclick="changeModel('anthropic/claude-sonnet-4-5', 'Claude 4.5 Sonnet')">
-                🎨 Claude 4.5 Sonnet
-            </button>
-            <button class="model-btn opus" onclick="changeModel('google-antigravity/claude-opus-4-5-thinking', 'Claude 4.5 Opus')">
-                🔮 Claude 4.5 Opus
-            </button>
+    <div class="scanline"></div>
+    <div class="container">
+        <div class="glitch-title">SHUVIS_OS</div>
+        <div class="status-bar">NEURAL_LINK: ACTIVE // AUTH: JUNGO</div>
+        
+        <div class="grid">
+            <button class="cyber-btn" onclick="send('google-antigravity/gemini-3-flash', 'FLASH.v3')">FLASH.v3</button>
+            <button class="cyber-btn pro" onclick="send('google-antigravity/gemini-3-pro', 'PRO.v3')">PRO.v3</button>
+            <button class="cyber-btn sonnet" onclick="send('anthropic/claude-sonnet-4-5', 'SONNET.4.5')">SONNET.4.5</button>
+            <button class="cyber-btn opus" onclick="send('google-antigravity/claude-opus-4-5-thinking', 'OPUS.4.5')">OPUS.4.5</button>
         </div>
 
-        <div id="status" class="status-msg">🟢 자동 실행 준비 완료</div>
+        <div id="log">>>> WAITING_FOR_INPUT...</div>
     </div>
 
     <script>
-        function changeModel(modelId, modelName) {
-            const status = document.getElementById('status');
-            status.innerText = `${modelName} 전환 중...`;
-            
+        function send(id, name) {
+            const log = document.getElementById('log');
+            log.innerText = `>>> INITIALIZING_${name}...`;
+            log.style.color = 'var(--neon-yellow)';
+
             if (window.clawdbotSendUserAction) {
                 window.clawdbotSendUserAction({
                     name: 'change_model',
-                    surfaceId: 'main',
-                    context: { modelId: modelId, modelName: modelName }
+                    context: { modelId: id, modelName: name }
                 });
-                status.innerText = `🚀 ${modelName} 완료!`;
-                status.style.color = '#4ade80';
+                setTimeout(() => {
+                    log.innerText = `>>> ${name}_LINK_ESTABLISHED`;
+                    log.style.color = 'var(--neon-green)';
+                }, 1000);
             } else {
-                navigator.clipboard.writeText(`/model ${modelId}`).then(() => {
-                    alert(`자동 실행 미연결\n명령어가 복사되었습니다: /model ${modelId}`);
+                navigator.clipboard.writeText(`/model ${id}`).then(() => {
+                    log.innerText = `>>> CMD_COPIED_TO_BUFFER`;
                 });
             }
-            
-            setTimeout(() => {
-                status.innerText = '🟢 자동 실행 준비 완료';
-                status.style.color = '#94a3b8';
-            }, 3000);
         }
     </script>
 </body>
