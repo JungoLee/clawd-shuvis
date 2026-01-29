@@ -1,4 +1,9 @@
 @echo off
-cd /d "C:\Users\tough\clawd"
+setlocal
+cd /d "%~dp0"
 powershell -NoProfile -ExecutionPolicy Bypass -File "controller.ps1"
-pause
+if %errorlevel% neq 0 (
+    echo.
+    echo [!] Shuvis: PowerShell Error detected. 
+    pause
+)
