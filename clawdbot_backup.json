@@ -1,0 +1,32 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "google-antigravity/gemini-3-flash"
+      },
+      "models": {
+        "anthropic/claude-sonnet-4-5": {
+          "alias": "sonnet"
+        },
+        "google-antigravity/claude-opus-4-5-thinking": {},
+        "google-antigravity/gemini-3-flash": {}
+      },
+      "workspace": "C:\\Users\\tough\\clawd",
+      "heartbeat": {
+        "every": "1h"
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "7951542703:AAEtqbCaUxVSP7dWnWPJroo9XUkkKNEgwuQ",
+      "allowFrom": [
+        638869179
+      ]
+    }
+  },
+  "gateway": {
+    "port": 18789
+  }
+}
